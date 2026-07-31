@@ -26,14 +26,14 @@ spec:
           - weight: 1
             preference:
               matchExpressions:
-              - key: size
+              - key: clr
                 operator: In
                 values:
-                - medium
+                - green
           - weight: 50
             preference:
               matchExpressions:
-              - key: size
+              - key: clr
                 operator: In
                 values:
-                - small
+                - yellow
