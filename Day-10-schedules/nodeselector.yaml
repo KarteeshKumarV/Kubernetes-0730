@@ -20,4 +20,4 @@ spec:
       - name: nginx-container
         image: nginx
       nodeSelector:
-        clr: white 
+        clr: green
