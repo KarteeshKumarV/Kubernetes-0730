@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-startup-only
+  labels:
+    app: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+    command: ["sh", "-c", "sleep 40 && nginx -g 'daemon off;'"]
+    ports:
+    - containerPort: 80
+    startupProbe:
+      httpGet:
+        path: /test
+        port: 80
+      failureThreshold: 10
+      periodSeconds: 5
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-lb
+spec:
+  type: LoadBalancer
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+
+
+      # The startup probe checks if the application within the container has started successfully. In this case, it sends an HTTP GET request to the /test endpoint on port 80. If the probe fails 10 times (failureThreshold) with a period of 5 seconds between each check (periodSeconds), Kubernetes will consider the container as failed to start and will take appropriate action, such as restarting the container.
+      # my test path not exist, so the startup probe will fail until the sleep command completes and nginx starts serving requests. This allows the container to have a longer startup time without being killed by Kubernetes.
+      #it tries multiple times to check if the application is ready, and it will only consider the container as failed if it fails the specified number of times (failureThreshold) within the given period (periodSeconds).
+      # after the sleep command completes, nginx will start serving requests, and the startup probe will succeed, allowing the container to transition to a running state.
+      #even application takes longer to start, the startup probe ensures that Kubernetes does not prematurely terminate the container, providing a more reliable startup process for applications with longer initialization times.
+      #pod enters into crashloopbackoff state because the startup probe fails until the sleep command completes and nginx starts serving requests. This is expected behavior, as the startup probe is designed to check the readiness of the application within the container. Once the sleep command finishes and nginx starts, the startup probe will succeed, and the pod will transition to a running state.
+      #before going to crashloopbackoff state how many time pod has restarted? The pod will restart multiple times based on the failureThreshold and periodSeconds settings of the startup probe. In this case, the startup probe is configured to fail 10 times (failureThreshold) with a period of 5 seconds (periodSeconds) between each check. Therefore, the pod will restart up to 10 times before it enters the crashloopbackoff state.
+
+
+#There is no fixed restart count that causes a Pod to enter CrashLoopBackOff.
+
+# Kubernetes does not say:
+
+# ❌ "After 3 restarts → CrashLoopBackOff"
+# ❌ "After 5 restarts → CrashLoopBackOff"
+# ❌ "After 10 restarts → CrashLoopBackOff"
+
+# Instead, it works like this:
+
+# Container starts.
+# Container crashes or is killed.
+# Kubernetes restarts it.
+# If it continues to fail repeatedly in a short period, Kubernetes starts increasing the delay before each restart (10s → 20s → 40s → 80s → ...).
+# During this backoff period, the Pod status becomes CrashLoopBackOff.
