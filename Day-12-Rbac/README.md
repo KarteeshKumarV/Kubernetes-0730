@@ -268,7 +268,8 @@ In EKS:
 This mapping is stored in:
 
 ```text
-aws-auth ConfigMap
+aws-auth ConfigMap edit -->   kubectl edit cm aws-auth -n kube-system
+
 ```
 
 inside:
