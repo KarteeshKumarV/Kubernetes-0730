@@ -15,6 +15,10 @@ data:
       username: prod
       groups:
         - admin-team
+        #if we want to attach role directly ro user through rolebinding we can user directly to aws_auth config 
+  # mapUsers: |
+  # - userarn: arn:aws:iam::654654228171:user/prod
+  #   username: prod
 kind: ConfigMap
 metadata:
   creationTimestamp: "2026-05-20T01:23:35Z"
