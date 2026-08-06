@@ -1,0 +1,15 @@
+mapUsers: |
+  - userarn: arn:aws:iam::654654228171:user/prod
+    username: prod
+    groups:
+      - developers
+
+  - userarn: arn:aws:iam::654654228171:user/dev
+    username: dev
+    groups:
+      - developers
+
+  - userarn: arn:aws:iam::654654228171:user/test
+    username: test
+    groups:
+      - developers
