@@ -16,7 +16,7 @@ data:
     - userarn: arn:aws:iam::654654228171:user/prod
       username: prod
       groups:
-        - admin-team
+        - developer
         #if we want to attach role directly ro user through rolebinding we can user directly to aws_auth config 
   # mapUsers: |
   # - userarn: arn:aws:iam::654654228171:user/prod
