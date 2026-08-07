@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: memory-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: memory-demo
+  template:
+    metadata:
+      labels:
+        app: memory-demo
+    spec:
+      containers:
+      - name: app
+        image: python:3.11
+        command: ["python"]
+        args:
+          - -c
+          - |
+            x = []
+            while True:
+                x.append("A" * 1024 * 1024)   # Allocate 1 MB repeatedly
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
