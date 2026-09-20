@@ -1,0 +1,9 @@
+---
+- name: My first custom AAP playbook
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Display AAP message
+      ansible.builtin.debug:
+        msg: "Hello from my custom Ansible Automation Platform job!"
