@@ -1,9 +1,16 @@
 ---
-- name: My first custom AAP playbook
+- name: Inspect AAP execution environment
   hosts: all
-  gather_facts: false
 
   tasks:
-    - name: Display AAP message
+    - name: Display hostname
       ansible.builtin.debug:
-        msg: "Hello from my custom Ansible Automation Platform job!"
+        var: ansible_hostname
+
+    - name: Display Python interpreter
+      ansible.builtin.debug:
+        var: ansible_python_interpreter
+
+    - name: Display operating system
+      ansible.builtin.debug:
+        var: ansible_distribution
